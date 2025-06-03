@@ -1,5 +1,6 @@
-﻿namespace CReiss.Core
+﻿namespace CReiss.Core.Routes
 {
+
     public class UnitRoute
     {
 
@@ -9,9 +10,9 @@
         {
             get
             {
-                if (this.Events.Count > 1)
+                if (Events.Count > 1)
                 {
-                    return this.Events[this.Events.Count - 1].EventDateTime.Subtract(this.Events[0].EventDateTime).TotalSeconds / 86400;
+                    return Events[Events.Count - 1].EventDateTime.Subtract(Events[0].EventDateTime).TotalSeconds / 86400;
                 }
                 else
                 {
