@@ -3,6 +3,8 @@
     public class RouteAverage
     {
         public int Id { get; set; }
+        public Location OriginLocation { get; set; } = new Location();
+        public Location DestinationLocation { get; set; } = new Location();
         public List<RouteLocationAverage> LocationAverages { get; set; } = new List<RouteLocationAverage>();     
         public double AverageTravelTime
         {

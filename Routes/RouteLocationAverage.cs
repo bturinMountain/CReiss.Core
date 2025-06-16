@@ -13,6 +13,8 @@
         public bool IsLast { get; set; }
         public bool IsLoaded { get; set; }
         public int RouteLocationId { get; set; }
+        public Location OriginLocation { get; set; } = new Location();
+        public Location DestinationLocation { get; set; } = new Location();
     }
 
 }
