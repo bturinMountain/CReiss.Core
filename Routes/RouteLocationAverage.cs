@@ -1,4 +1,6 @@
-﻿namespace CReiss.Core.Routes
+﻿using CReiss.Core.Locations;
+
+namespace CReiss.Core.Routes
 {
 
     public class RouteLocationAverage

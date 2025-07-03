@@ -1,4 +1,6 @@
-﻿namespace CReiss.Core
+﻿using CReiss.Core.Locations;
+
+namespace CReiss.Core
 {
 
     public class UnitLoadedEmptyItem : UnitEventBase
