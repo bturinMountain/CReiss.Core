@@ -5,6 +5,7 @@ namespace CReiss.Core
 
     public class LoadedEmptyTotal
     {
+        public DateTime? EventDate { get; set; }
         public Location Location { get; set; } = new Location();
         public List<KeyValuePair<string, Int32>> Destinations { get; set; } = new List<KeyValuePair<string, int>>();
         public int OfflineTotalUnits { get; set; } = 0; 

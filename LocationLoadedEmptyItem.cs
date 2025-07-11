@@ -3,6 +3,24 @@
 namespace CReiss.Core
 {
 
+
+    public class LocationLoadedEmpty
+    {
+        public Location Location { get; set; } = new Location();
+        public List<LoadedEmptyItem> Loaded { get; set; } = new List<LoadedEmptyItem>();
+        public List<LoadedEmptyItem> Empty { get; set; } = new List<LoadedEmptyItem>();
+    }
+
+    public class LoadedEmptyItem
+    {
+        public DateTime? EventDate { get; set; }
+        public bool IsLoaded { get; set; }
+        public int TotalUnits { get; set; }
+        public int? TotalNetTons { get; set; }
+    }
+
+
+
     public class LocationLoadedEmptyItem
     {
         public DateTime EventDate { get; set; }
