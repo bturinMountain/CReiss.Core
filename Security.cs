@@ -6,6 +6,11 @@ namespace CReiss.Core
 
 	public static class Security
 	{
+		public class AppUser
+		{
+			public string Username { get; set; } = String.Empty;
+			public bool IsAdmin { get; set; } = false;
+		}
 
 		private const int ERROR_SUCCESS = 0;
 
