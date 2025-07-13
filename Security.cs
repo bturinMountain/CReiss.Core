@@ -1,14 +1,50 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-	using System;
-using System.Runtime.InteropServices;
-
 namespace CReiss.Core
 {
 
 	public static class Security
 	{
+
+		private const int ERROR_SUCCESS = 0;
+
+		[DllImport("Netapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+		private static extern int NetLocalGroupGetMembers(
+			string servername,
+			string groupname,
+			uint level,
+			out IntPtr bufptr,
+			uint prefmaxlen,
+			out uint entriesread,
+			out uint totalentries,
+			IntPtr resume_handle
+		);
+
+		[DllImport("Netapi32.dll")]
+		private static extern int NetApiBufferFree(IntPtr buffer);
+
+		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+		private struct LOCALGROUP_MEMBERS_INFO_1
+		{
+			public IntPtr sid;
+			public SID_NAME_USE sidUsage;
+			public IntPtr name;
+		}
+
+		private enum SID_NAME_USE
+		{
+			User = 1,
+			Group,
+			Domain,
+			Alias,
+			WellKnownGroup,
+			DeletedAccount,
+			Invalid,
+			Unknown,
+			Computer,
+			Label
+		}
 
 		public static string CurrentUser()
 		{
@@ -28,72 +64,62 @@ namespace CReiss.Core
 			WindowsPrincipal principal = new WindowsPrincipal(identity);
 			return principal.IsInRole(groupName);
 		}
-
-	}
-
-
-
-public class LocalGroupChecker
-	{
-		private const uint LG_INCLUDE_INDIRECT = 0x0001;
-		private const uint ERROR_SUCCESS = 0;
-
-		[DllImport("Netapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-		private static extern int NetUserGetLocalGroups(
-			string servername,
-			string username,
-			uint level,
-			uint flags,
-			out IntPtr bufptr,
-			out uint entriesread,
-			out uint totalentries
-		);
-
-		[DllImport("Netapi32.dll", SetLastError = true)]
-		private static extern int NetApiBufferFree(IntPtr buffer);
-
-		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-		private struct LOCALGROUP_USERS_INFO_0
-		{
-			public IntPtr name;
-		}
-
 		public static bool IsUserInLocalGroup(string username, string groupName)
 		{
 			IntPtr buffer = IntPtr.Zero;
 			uint entriesRead = 0;
 			uint totalEntries = 0;
+			//
+			string inputUser = username;
+			int backslashIndex = username.LastIndexOf('\\');
+			if (backslashIndex >= 0)
+			{
+				inputUser = username.Substring(backslashIndex + 1); // strip domain/machine prefix
+			}
+			string normalizedInput = inputUser.Trim().ToLowerInvariant();
 
+			int result = NetLocalGroupGetMembers(
+				null, groupName, 1,
+				out buffer,
+				0xFFFFFFFF,
+				out entriesRead,
+				out totalEntries,
+				IntPtr.Zero
+			);
+			if (result != ERROR_SUCCESS || buffer == IntPtr.Zero || entriesRead == 0)
+			{
+				return false;
+			}
 			try
 			{
-				int result = NetUserGetLocalGroups(
-					null, // local machine
-					username,
-					0, // level 0
-					LG_INCLUDE_INDIRECT,
-					out buffer,
-					out entriesRead,
-					out totalEntries
-				);
-
-				if (result != ERROR_SUCCESS || buffer == IntPtr.Zero)
-				{
-					return false;
-				}
-
-				int structSize = Marshal.SizeOf(typeof(LOCALGROUP_USERS_INFO_0));
+				int structSize = Marshal.SizeOf(typeof(LOCALGROUP_MEMBERS_INFO_1));
 				for (int i = 0; i < entriesRead; i++)
 				{
-					IntPtr itemPtr = new IntPtr(buffer.ToInt64() + i * structSize);
-					LOCALGROUP_USERS_INFO_0 groupInfo = (LOCALGROUP_USERS_INFO_0)Marshal.PtrToStructure(itemPtr, typeof(LOCALGROUP_USERS_INFO_0));
-					string group = Marshal.PtrToStringUni(groupInfo.name);
-
-					if (string.Equals(group, groupName, StringComparison.OrdinalIgnoreCase))
+					IntPtr itemPtr = IntPtr.Add(buffer, i * structSize);
+					// Very defensive read
+					LOCALGROUP_MEMBERS_INFO_1 member;
+					try
 					{
-						return true;
+						member = Marshal.PtrToStructure<LOCALGROUP_MEMBERS_INFO_1>(itemPtr);
+					}
+					catch
+					{
+						continue; // skip any invalid entries
+					}
+					if (member.name == IntPtr.Zero)
+					{
+						continue;
+					}
+					string memberName = Marshal.PtrToStringUni(member.name);
+					if (!string.IsNullOrEmpty(memberName))
+					{
+						string normalizedMember = memberName.Trim().ToLowerInvariant();
+						if (normalizedMember == normalizedInput || normalizedMember.EndsWith("\\" + normalizedInput))
+						{
+							return true;
+						}
 					}
 				}
-
 				return false;
 			}
 			finally
@@ -104,7 +130,7 @@ public class LocalGroupChecker
 				}
 			}
 		}
-	}
 
+	}
 
 }
