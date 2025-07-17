@@ -13,6 +13,8 @@ namespace CReiss.Core
         public int TotalWeightNetTons { get; set; } = 0;
         public int TotalExceptions { get; set; } = 0;
         public bool IsLoaded { get; set; } = false;
+        public double AvgTimeLoadToEmpty { get; set; } = 0;
+        public double AvgTransitTimeFromDock { get; set; } = 0;
     }
 
 }

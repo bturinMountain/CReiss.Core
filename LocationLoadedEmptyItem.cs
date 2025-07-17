@@ -18,6 +18,8 @@ namespace CReiss.Core
         public bool IsLoaded { get; set; }
         public int TotalUnits { get; set; }
         public int? TotalNetTons { get; set; }
+        public double AvgTimeLoadToEmpty { get; set; } = 0;
+        public double AvgTransitTimeFromDock { get; set; } = 0;
     }
 
 
