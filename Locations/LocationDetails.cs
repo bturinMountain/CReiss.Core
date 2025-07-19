@@ -7,8 +7,9 @@
         public string CommonName { get; set; } = string.Empty;
         public string DisplayName { get; set; } = string.Empty;
         public string State { get; set; } = string.Empty;
-        public bool IsDefault { get; set; } = false;
-        public bool IsActive { get; set; } = false;
+		public bool IsDefault { get; set; } = false;
+		public DateTime LastEventDateTime { get; set; } = DateTime.MinValue;
+		public bool IsActive { get; set; } = false;
 
 
     }
