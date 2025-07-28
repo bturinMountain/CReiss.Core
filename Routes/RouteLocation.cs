@@ -29,4 +29,18 @@ namespace CReiss.Core.Routes
 
     }
 
+    // TODO: Leg can be segment
+
+    public class Leg
+    {
+        public int Id { get; set; } = 0;
+        public List<Location> Locations { get; set; } = new List<Location>();
+    }
+
+    public class NetworkRoute
+    {
+        public int Id { get; set; } = 0;
+        public List<Location> Locations { get; set; } = new List<Location>();
+    }
+
 }
