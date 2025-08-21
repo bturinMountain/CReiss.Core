@@ -10,7 +10,8 @@ namespace CReiss.Core
 		{
 			public string Username { get; set; } = String.Empty;
 			public bool IsAdmin { get; set; } = false;
-		}
+            public bool IsUser { get; set; } = false;
+        }
 
 		private const int ERROR_SUCCESS = 0;
 
