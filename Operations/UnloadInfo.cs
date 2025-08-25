@@ -12,6 +12,9 @@ namespace CReiss.Core.Operations
         public short TrucksToStockPile { get; set; } = 0;
         public string Notes { get; set; } = String.Empty;
         public string SubmittedBy { get; set; } = String.Empty;
+
+        public DateTime EventDateTimeUtc { get; set; } = DateTime.MinValue;
+
         public DateTime SubmittedOnUtc {  get; set; } = DateTime.MinValue;
 
     }
