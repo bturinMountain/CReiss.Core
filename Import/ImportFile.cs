@@ -6,7 +6,7 @@
 
         private const string DIR_YEAR_FORMAT = "yyyy";
         private const string DIR_MONTH_FORMAT = "MM MMMM";
-        private const string FILE_FORMAT = "yyyy-MM-dd hh-mm-ss";
+        private const string FILE_FORMAT = "yyyy-MM-dd HH-mm-ss";
         private const string FILE_EXTENSION = "csv";
 
         public int Id { get; set; } = 0;
