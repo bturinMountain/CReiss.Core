@@ -2,6 +2,7 @@
 
 namespace CReiss.Core.Routes
 {
+
     public class RouteAverage
     {
         public int Id { get; set; }
