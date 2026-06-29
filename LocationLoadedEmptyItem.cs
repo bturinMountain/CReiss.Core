@@ -5,7 +5,7 @@ namespace CReiss.Core
 
     public class LocationLoadedEmpty
     {
-        public Location Location { get; set; } = new Location();
+        public LocationDetails Location { get; set; } = new LocationDetails();
         public List<LoadedEmptyItem> Loaded { get; set; } = new List<LoadedEmptyItem>();
         public List<LoadedEmptyItem> Empty { get; set; } = new List<LoadedEmptyItem>();
         public double AvgTimeLoadToEmpty { get; set; } = 0;
